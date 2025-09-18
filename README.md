@@ -1,8 +1,8 @@
 # 📅 Programa Móvil – Feria ICBF 17 de Octubre
-** Aplicación móvil de apoyo para la Feria del Instituto Colombiano de Bienestar Familiar (ICBF) ** 
+**Aplicación móvil de apoyo para la Feria del Instituto Colombiano de Bienestar Familiar (ICBF)** 
 --------------------------------------------------
 ## 📅 Información General
-** Proyecto de Prácticas Profesionales ** 
+**Proyecto de Prácticas Profesionales** 
 
 * Universidad: Corporación Universitaria CORHUILA & Instituto de Bienestar Familiar 
 * Materia: Practica Profesional 
@@ -11,7 +11,7 @@
 * Director de TIC: Ramiro Joven 
 ---------------------------------------------------
 ## 🧾 Descripción
-El proyecto consiste en el desarrollo de una **aplicación móvil** diseñada para apoyar la ** Feria del ICBF del 17 de octubre **, cuyo propósito es brindar información, interacción y acompañamiento a los asistentes en tiempo real.
+El proyecto consiste en el desarrollo de una **aplicación móvil** diseñada para apoyar la **Feria del ICBF del 17 de octubre**, cuyo propósito es brindar información, interacción y acompañamiento a los asistentes en tiempo real.
 --------------------------------------------------------
 El sistema busca facilitar:
 * brindar la Información de cada politica que tiene el Instituto de Bienestar familiar en la feria del 17 de octubre.
@@ -20,4 +20,4 @@ El sistema busca facilitar:
 ----------------------------------------------------------
 ## 🎯 Objetivo General
 
-Desarrollar un ** programa móvil ** que sirva como herramienta interactiva y de apoyo en la Feria del ICBF, contribuyendo a mejorar la experiencia de los asistentes y optimizar la difusión de la información institucional.
+Desarrollar un **programa móvil** que sirva como herramienta interactiva y de apoyo en la Feria del ICBF, contribuyendo a mejorar la experiencia de los asistentes y optimizar la difusión de la información institucional.

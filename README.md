@@ -19,5 +19,20 @@ El sistema busca facilitar:
 * La recompilación de los datos sobre la asistencia y la participación de los usuarios. 
 ----------------------------------------------------------
 ## 🎯 Objetivo General
-
 Desarrollar un **programa móvil** que sirva como herramienta interactiva y de apoyo en la Feria del ICBF, contribuyendo a mejorar la experiencia de los asistentes y optimizar la difusión de la información institucional.
+## 🎯 Objetivos Específicos
+1. Implementar un módulo de registro de asistentes por medio de una encuesta.  
+2. Desarrollar un sistema de notificaciones y recordatorios dentro del correo electronico .  
+3. Incluir un apartado de información institucional sobre los programas del ICBF.  
+------------------------------------------------------------
+## ⚙️ Tecnologías y Arquitectura
+| Componente  | Tecnología                          |
+|-------------|--------------------------------------|
+| Plataforma  | Android / iOS (multiplataforma)     |
+| Framework   | Flutter (Dart) / React Native       |
+| Backend     | Node.js con Express / Firebase      |
+| Arquitectura | Cliente – Servidor                 |
+| Metodología | Scrum / Ágil                        |
+------------------------------------------------------------
+
+## 📂 Estructura del Repositorio

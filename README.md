@@ -29,8 +29,8 @@ Desarrollar un **programa móvil** que sirva como herramienta interactiva y de a
 | Componente  | Tecnología                          |
 |-------------|--------------------------------------|
 | Plataforma  | Android / iOS (multiplataforma)     |
-| Framework   | Flutter (Dart) / React Native       |
-| Backend     | Node.js con Express / Firebase      |
+| Framework   | Flutter (Dart)        |
+| Backend     |  Firebase      |
 | Arquitectura | Cliente – Servidor                 |
 | Metodología | Scrum / Ágil                        |
 ------------------------------------------------------------

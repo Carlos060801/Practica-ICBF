@@ -36,3 +36,9 @@ Desarrollar un **programa móvil** que sirva como herramienta interactiva y de a
 ------------------------------------------------------------
 
 ## 📂 Estructura del Repositorio
+Practica-ICBF/
+├── docs/                # Manuales y documentación
+├── src/                 # Código modular 
+
+├── assets/              # Imágenes livianas y logos
+└── external/            # Enlaces a recursos externos (Drive)

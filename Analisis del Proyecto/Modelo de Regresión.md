@@ -4,13 +4,15 @@
 Desarrollar un modelo predictivo que estime el nivel de participación o interacción de los usuarios en la aplicación SIGE, con base en variables relacionadas con su comportamiento dentro de la plataforma.
 ---------------------------------------
 2. Variables del modelo
-| Tipo                        | Variable                                    | Descripción                                                       |
+| Tipo                        | Variable                                    | Descripción                                                       | 
 | --------------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
 | Variable dependiente (Y)    | **Interacción del usuario**                 | Número de accesos o tiempo de uso en la app (minutos por semana). |
 | Variable independiente (X₁) | **Número de políticas consultadas**         | Cuántas políticas institucionales visualizó el usuario.           |
 | Variable independiente (X₂) | **Consultas al chatbot**                    | Número de interacciones con el chatbot.                           |
 | Variable independiente (X₃) | **Sesiones iniciadas**                      | Cantidad de veces que el usuario ingresó en la aplicación.        |
 | Variable independiente (X₄) | **Tiempo total en la aplicación (minutos)** | Duración total acumulada de uso.                                  |
+
+---
 ----------------------------------------- 
 3. Fórmula general
 Donde: 

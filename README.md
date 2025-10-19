@@ -41,6 +41,44 @@ docs:
 # Manuales y documentación Con Diapositivas
 # arquitectura
 # Proyecto
-assets  
-Imágenes livianas de la aplicación terminada
-external          # Enlaces a recursos externos (Drive)
+-----------------------------------
+# 📱 SIGE - Sistema de Gestión del Bienestar Familiar
+
+Proyecto desarrollado para la **Institución Bienestar Familiar (ICBF)** con el objetivo
+de comunicar las **Misión, Visión y sus políticas y objetivos institucionales** a los nuevos integrantes del bienestar,
+a través de una **aplicación móvil interactiva** con chatbot y acceso a información de los 7 pilares:
+
+- Política de Calidad  
+- Política Ambiental  
+- SGSI (Seguridad de la Información)  
+- Riesgos  
+- Tratamiento de Datos Personales  
+- SST (Seguridad y Salud en el Trabajo)  
+- Bienestar  
+
+---
+
+## 🧩 Arquitectura del Proyecto
+
+El sistema se basa en una arquitectura **distribuida**:
+- **Frontend móvil:** Flutter (Dart)
+- **Backend / Servicios:** Git Cloud + APIs REST
+- **Chatbot:** Módulo integrado de asistencia a nuevos usuarios
+- **Repositorio:** GitHub (código base y documentación)
+- **Almacenamiento externo:** Google Drive (proyecto completo)
+
+---
+
+## 🚀 Instalación y Ejecución
+
+> ⚠️ Debido al peso del proyecto, el código fuente completo se encuentra en Google Drive.
+
+1. Descarga la aplicación completa desde:
+   👉 [Descargar SIGE - Google Drive](https://drive.google.com/file/d/1uzvrhwR4T-QGUw40IEtltTaQTNruiznr/view?usp=sharing)
+
+2. Descomprime el archivo ZIP.  
+3. Abre la carpeta en VS Code o Android Studio.  
+4. Ejecuta el siguiente comando:
+   ```bash
+   flutter pub get
+   flutter run

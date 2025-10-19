@@ -4,6 +4,7 @@
 Desarrollar un modelo predictivo que estime el nivel de participación o interacción de los usuarios en la aplicación SIGE, con base en variables relacionadas con su comportamiento dentro de la plataforma.
 ---------------------------------------
 2. Variables del modelo
+
 | Tipo                        | Variable                                    | Descripción                                                       | 
 | --------------------------- | ------------------------------------------- | ----------------------------------------------------------------- |
 | Variable dependiente (Y)    | **Interacción del usuario**                 | Número de accesos o tiempo de uso en la app (minutos por semana). |

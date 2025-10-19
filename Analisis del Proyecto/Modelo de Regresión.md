@@ -13,7 +13,7 @@ Desarrollar un modelo predictivo que estime el nivel de participación o interac
 | Variable independiente (X₃) | **Sesiones iniciadas**                      | Cantidad de veces que el usuario ingresó en la aplicación.        |
 | Variable independiente (X₄) | **Tiempo total en la aplicación (minutos)** | Duración total acumulada de uso.                                  |
 
----
+
 ----------------------------------------- 
 3. Fórmula general
 Donde: 

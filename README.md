@@ -1,4 +1,4 @@
-# 📅 Programa Móvil – Feria ICBF 17 de Octubre
+# 📅 Programa Móvil SIGUE
 **Aplicación móvil de apoyo para la Feria del Instituto Colombiano de Bienestar Familiar (ICBF)** 
 --------------------------------------------------
 ## 📅 Información General

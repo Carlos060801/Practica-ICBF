@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "260250829831",
+    "project_id": "sige-95d85",
+    "storage_bucket": "sige-95d85.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:260250829831:android:05a4caac682f403b8dd6a2",
+        "android_client_info": {
+          "package_name": "com.sige.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBh2zg4A5KmyDSutW5hSLNc9S3VN7PQHXA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

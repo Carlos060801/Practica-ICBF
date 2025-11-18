@@ -1,0 +1,134 @@
+name: aplicacionicbf
+description: "A new Flutter project."
+# The following line prevents the package from being accidentally published to
+# pub.dev using `flutter pub publish`. This is preferred for private packages.
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+# The following defines the version and build number for your application.
+# A version number is three numbers separated by dots, like 1.2.43
+# followed by an optional build number separated by a +.
+# Both the version and the builder number may be overridden in flutter
+# build by specifying --build-name and --build-number, respectively.
+# In Android, build-name is used as versionName while build-number used as versionCode.
+# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
+# In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
+# Read more about iOS versioning at
+# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# In Windows, build-name is used as the major, minor, and patch parts
+# of the product and file versions while build-number is used as the build suffix.
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.9.2
+
+# Dependencies specify other packages that your package needs in order to work.
+# To automatically upgrade your package dependencies to the latest versions
+# consider running `flutter pub upgrade --major-versions`. Alternatively,
+# dependencies can be manually updated by changing the version numbers below to
+# the latest version available on pub.dev. To see which dependencies have newer
+# versions available, run `flutter pub outdated`.
+dependencies:
+  flutter:
+    sdk: flutter
+  video_player: ^2.9.1
+  # The following adds the Cupertino Icons font to your application.
+  # Use with the CupertinoIcons class for iOS style icons.
+  cupertino_icons: ^1.0.8
+  pdf: ^3.11.3
+  path_provider: ^2.1.5
+  open_filex: ^4.5.0
+  permission_handler: ^12.0.1
+  url_launcher: ^6.3.2
+  flutter_chat_ui: ^2.9.1
+  flutter_chat_types: ^3.5.2
+  http: ^1.5.0
+  font_awesome_flutter: ^10.7.0
+  dart_openai: ^5.1.0
+  printing: ^5.14.2
+  flutter_dotenv: ^5.1.0
+  shared_preferences: ^2.2.2
+  file_picker: ^10.3.3
+  open_file: ^3.5.10
+
+  
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  # The "flutter_lints" package below contains a set of recommended lints to
+  # encourage good coding practices. The lint set provided by the package is
+  # activated in the `analysis_options.yaml` file located at the root of your
+  # package. See that file for information about deactivating specific lint
+  # rules and activating additional ones.
+  flutter_lints: ^6.0.0
+
+# For information on the generic Dart part of this file, see the
+# following page: https://dart.dev/tools/pub/pubspec
+
+# The following section is specific to Flutter packages.
+flutter:
+
+
+  # The following line ensures that the Material Icons font is
+  # included with your application, so that you can use the icons in
+  # the material Icons class.
+  uses-material-design: true
+  assets:
+    - assets/imagenes/fondo.jpg
+    - assets/imagenes/objetivos.png
+    - assets/imagenes/politica_integral.png
+    - assets/imagenes/logo_icbf.png
+    - assets/imagenes/sgsi.png
+    - assets/imagenes/ambiental.jpg
+    - assets/imagenes/calidad.jpg
+    - assets/video/modelo_conocimiento.mp4
+    - assets/imagenes/sgsi.jpg
+    - assets/imagenes/sst01.png
+    - assets/pdf/Modelo_de_Planeacion.pdf
+    - assets/pdf/Partes_Interesadas.pdf
+    - assets/pdf/Modelo_Operacion_Procesos.pdf
+    - assets/pdf/Gestion_Riesgos.pdf
+    - assets/pdf/Mejora_Continua.pdf
+    - assets/pdf/Politica_SST.pdf
+    - assets/pdf/INDUCCION SGA.pdf
+    - assets/imagenes/Riesgos.png
+    - assets/imagenes/datos personales.png
+    - assets/imagenes/logo_icbf.png
+    - assets/pdf/Presentacion_sgsi.pdf
+    - assets/pdf/Politica_tratamiento_datos.pdf
+    - assets/pdf/cartilla_seguridad.pdf
+    - assets/pdf/formato_pruebas_sgsi.pdf
+    - assets/pdf/manual_tratamiento_datos.pdf
+    - assets/pdf/Politica_tratamiento_datos1.pdf
+    - assets/pdf/seguridad_digital_trabajo_en_casa.pdf
+    - assets/pdf/Politica_riesgos.pdf
+# pubspec.yaml
+  # To add assets to your application, add an assets section, like this:
+  # assets:
+  #   - images/a_dot_burr.jpeg
+  #   - images/a_dot_ham.jpeg
+
+  # An image asset can refer to one or more resolution-specific "variants", see
+  # https://flutter.dev/to/resolution-aware-images
+
+  # For details regarding adding assets from package dependencies, see
+  # https://flutter.dev/to/asset-from-package
+
+  # To add custom fonts to your application, add a fonts section here,
+  # in this "flutter" section. Each entry in this list should have a
+  # "family" key with the font family name, and a "fonts" key with a
+  # list giving the asset and other descriptors for the font. For
+  # example:
+  # fonts:
+  #   - family: Schyler
+  #     fonts:
+  #       - asset: fonts/Schyler-Regular.ttf
+  #       - asset: fonts/Schyler-Italic.ttf
+  #         style: italic
+  #   - family: Trajan Pro
+  #     fonts:
+  #       - asset: fonts/TrajanPro.ttf
+  #       - asset: fonts/TrajanPro_Bold.ttf
+  #         weight: 700
+  #
+  # For details regarding fonts from package dependencies,
+  # see https://flutter.dev/to/font-from-package

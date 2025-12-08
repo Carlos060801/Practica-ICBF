@@ -26,13 +26,17 @@ import notificationRoutes from "./routes/notification.routes.js";
 
 const app = express();
 
-// __dirname en ES Modules
+// Necesario para __dirname en ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // =========================
 // Middlewares Generales
 // =========================
+
+// 🔥 ESTA LÍNEA ES CLAVE PARA QUE Render reciba POST JSON
+app.use(express.urlencoded({ extended: true }));
+
 app.use(express.json({ limit: "25mb" }));
 app.use(cors());
 app.use(helmet());

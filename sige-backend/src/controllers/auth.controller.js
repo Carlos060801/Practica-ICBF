@@ -1,9 +1,20 @@
 // =====================================================
 // LOGIN (Versión Final para SIGE + Flutter)
 // =====================================================
+
 export const login = async (req, res) => {
   try {
+    console.log("BODY RECIBIDO EN LOGIN:", req.body); // 👀 Debug en Render
+
     const { email, password } = req.body;
+
+    // Validación obligatoria
+    if (!email || !password) {
+      return res.status(400).json({
+        message: "Faltan email o password",
+        bodyRecibido: req.body
+      });
+    }
 
     const emailLower = email.toLowerCase();
     const user = await User.findOne({ email: emailLower });
@@ -28,9 +39,7 @@ export const login = async (req, res) => {
       message: `El usuario ${emailLower} inició sesión`,
     });
 
-    // ============================================
-    //  RESPUESTA COMPLETA PARA EL LOGIN SIGE
-    // ============================================
+    // Respuesta completa para Flutter
     return res.json({
       message: "Login exitoso",
       token,

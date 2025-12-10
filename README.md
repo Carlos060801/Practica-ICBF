@@ -92,3 +92,56 @@ git clone https://github.com/Carlos060801/Practica-ICBF.git
 * cd repo-backend
 * npm install
 * npm start
+
+Crear archivo .env con:
+
+![alt text](image-2.png)
+----------------------------------------------------------------
+# Aplicación Flutter
+* cd repo-app
+* flutter pub get
+* flutter run
+---------------------------------------------------------------
+# Generar AAB:
+
+* flutter build aab --release
+----------------------------------------------------------------
+# 🌐 Despliegue en Render
+
+El servidor backend se encuentra desplegado en:
+
+https://sige-backend.onrender.com
+
+Render realiza despliegues continuos (CI/CD) con cada commit en la rama main.
+------------------------------------------------------------------
+# 🧪 Pruebas
+
+* Pruebas de endpoints con Postman / Thunder Client
+* Validación de UI en dispositivos Android 14–18
+* Pruebas de carga básica para API REST
+* Validación de subida de archivos a Firebase Storage
+-------------------------------------------------------------------
+📄 Documentación del Proyecto
+
+Se incluyen:
+
+📘 Manual de Usuario
+📗 Manual Técnico
+📗 Diapositivas 
+# Diagramas 
+🗺 Diagramas C4 (Niveles 1,2,3)
+🔄 Diagrama de Caso de Uso 
+🔄 Diagrama de Clases
+🔄Diagrama de Deploy
+🔄 BPMN de procesos
+🧩 Diagramas UML (Clases, Secuencia)
+# Proyecto 
+Ubicados en: 
+repo-documentos
+---------------------------------------------------------------------
+👨‍💻 Autor
+
+Carlos Daniel Culma Perdomo
+Estudiante de Ingeniería de Sistemas – CORHUILA
+Desarrollador de Software Móvil & Full Stack JR
+GitHub: Carlos060801

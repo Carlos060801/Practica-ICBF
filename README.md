@@ -110,7 +110,8 @@ Crear archivo .env con:
 
 El servidor backend se encuentra desplegado en:
 
-https://sige-backend.onrender.com
+https://sige-backend.onrender.com 
+https://dashboard.render.com/web/srv-d4rhhnfpm1nc738hcbig 
 
 Render realiza despliegues continuos (CI/CD) con cada commit en la rama main.
 ------------------------------------------------------------------

@@ -52,4 +52,42 @@ Este proyecto integra habilidades de ingeniería de sistemas, desarrollo móvil,
 * Archivos PDF y fotos alojados en Firebase Storage
 
 * Repositorio controlado con Git y GitHub
+------------------------------------------------------------
 # 🛠️ Tecnologías Utilizadas
+# Frontend
+
+* Flutter 3.x
+* Dart
+* Material Design
+* ImagePicker
+* Flutter DotEnv
+
+# Backend
+
+* Node.js 18
+* Express.js
+* Mongoose
+* Firebase Admin SDK
+* Bcryptjs
+* Helmet & CORS
+
+# Infraestructura
+
+* Render (Web Service)
+* MongoDB Atlas
+* Firebase Storage
+* Git & GitHub
+------------------------------------------------------------
+📁 Estructura del Proyecto
+![alt text](image.png)
+![alt text](image-1.png)
+-------------------------------------------------------------
+# ⚙️ Instalación y Ejecución
+
+1. Clonar el repositorio
+git clone https://github.com/Carlos060801/Practica-ICBF.git 
+
+2. Backend – Instalación
+* cd repo-backend
+* npm install
+* npm start

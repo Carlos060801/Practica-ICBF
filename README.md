@@ -78,7 +78,8 @@ Este proyecto integra habilidades de ingeniería de sistemas, desarrollo móvil,
 * Firebase Storage
 * Git & GitHub
 ------------------------------------------------------------
-📁 Estructura del Proyecto
+# 📁 Estructura del Proyecto
+
 ![alt text](image.png)
 ![alt text](image-1.png)
 -------------------------------------------------------------

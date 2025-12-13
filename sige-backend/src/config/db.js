@@ -1,11 +1,8 @@
 // =======================================================
-// db.js — Conexión MongoDB segura
+// db.js — Conexión MongoDB (versión final)
 // =======================================================
 
 import mongoose from "mongoose";
-
-// 🔎 Debug temporal (puedes borrarlo luego)
-console.log("MONGO_URI =", process.env.MONGO_URI);
 
 export const connectDB = async () => {
   try {

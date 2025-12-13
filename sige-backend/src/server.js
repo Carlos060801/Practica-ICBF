@@ -1,10 +1,21 @@
 // =======================================================
-// server.js — Backend SIGE Optimizado y Funcional
+// server.js — Backend SIGE (Estable para Windows y Railway)
 // =======================================================
 
-import "dotenv/config";
+// 🔥 CARGA FORZADA DEL .env (SOLUCIÓN DEFINITIVA EN WINDOWS)
+import dotenv from "dotenv";
+dotenv.config({
+  path: "D:/Aplicacion Bienestar/Practica-ICBF/sige-backend/.env",
+});
+
+// =========================
+// Firebase (no rompe si no hay variables)
+// =========================
 import "./config/firebase.js";
 
+// =========================
+// Imports principales
+// =========================
 import express from "express";
 import cors from "cors";
 import helmet from "helmet";
@@ -12,10 +23,11 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// DB
 import { connectDB } from "./config/db.js";
 
 // =========================
-// Importar Rutas
+// Rutas
 // =========================
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
@@ -26,27 +38,29 @@ import notificationRoutes from "./routes/notification.routes.js";
 
 const app = express();
 
-// Necesario para __dirname en ES Modules
+// __dirname para ES Modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // =========================
-// Middlewares Generales
+// Middlewares
 // =========================
-
-// 🔥 ESTA LÍNEA ES CLAVE PARA QUE Render reciba POST JSON
 app.use(express.urlencoded({ extended: true }));
-
 app.use(express.json({ limit: "25mb" }));
-app.use(cors());
+
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
+
 app.use(helmet());
 app.use(morgan("dev"));
 
-// Forzar timezone Bogotá
-app.use((req, res, next) => {
-  process.env.TZ = "America/Bogota";
-  next();
-});
+// Timezone Colombia
+process.env.TZ = "America/Bogota";
 
 // Archivos estáticos
 app.use(express.static(path.join(__dirname, "public")));
@@ -75,7 +89,7 @@ app.get("/", (req, res) => {
 });
 
 // =========================
-// Inicializar Servidor
+// Inicializar servidor
 // =========================
 connectDB();
 

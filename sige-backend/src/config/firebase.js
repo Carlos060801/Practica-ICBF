@@ -1,31 +1,54 @@
-// config/firebase.js
+// =======================================================
+// config/firebase.js — Inicialización segura Firebase Admin
+// =======================================================
+
 import admin from "firebase-admin";
 
-// 🛑 Importante: validar que PRIVATE_KEY exista y se procese correctamente
-const privateKey = process.env.FIREBASE_PRIVATE_KEY;
-if (!privateKey) {
-  console.error("❌ ERROR: FIREBASE_PRIVATE_KEY no está definido en el .env");
-  process.exit(1);
+let bucket = null;
+
+// Leer variables de entorno
+const {
+  FIREBASE_PROJECT_ID,
+  FIREBASE_CLIENT_EMAIL,
+  FIREBASE_PRIVATE_KEY,
+  FIREBASE_BUCKET,
+} = process.env;
+
+// 🔎 Validación mínima (sin matar el backend)
+const firebaseReady =
+  FIREBASE_PROJECT_ID &&
+  FIREBASE_CLIENT_EMAIL &&
+  FIREBASE_PRIVATE_KEY &&
+  FIREBASE_BUCKET;
+
+if (!firebaseReady) {
+  console.warn("⚠️ Firebase NO inicializado (variables incompletas)");
+} else {
+  try {
+    // Preparar credenciales
+    const serviceAccount = {
+      type: "service_account",
+      project_id: FIREBASE_PROJECT_ID,
+      client_email: FIREBASE_CLIENT_EMAIL,
+      private_key: FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+    };
+
+    // Inicializar solo una vez
+    if (!admin.apps.length) {
+      admin.initializeApp({
+        credential: admin.credential.cert(serviceAccount),
+        storageBucket: FIREBASE_BUCKET,
+      });
+
+      console.log("✅ Firebase Admin inicializado correctamente");
+      console.log("🪣 Bucket:", FIREBASE_BUCKET);
+    }
+
+    bucket = admin.storage().bucket();
+  } catch (error) {
+    console.error("❌ Error inicializando Firebase:", error.message);
+    bucket = null;
+  }
 }
-
-const serviceAccount = {
-  type: "service_account",
-  project_id: process.env.FIREBASE_PROJECT_ID,
-  private_key: privateKey.replace(/\\n/g, "\n"),   // 🔥 Corrección clave
-  client_email: process.env.FIREBASE_CLIENT_EMAIL,
-};
-
-// 🔥 Inicializar Firebase SOLO si no está inicializado antes
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    storageBucket: process.env.FIREBASE_BUCKET,   // 🔥 Debe ser .firebasestorage.app
-  });
-
-  console.log("✅ Firebase Admin inicializado con bucket:", process.env.FIREBASE_BUCKET);
-}
-
-// Exportamos bucket listo para usar
-const bucket = admin.storage().bucket();
 
 export default bucket;

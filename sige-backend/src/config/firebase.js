@@ -1,12 +1,11 @@
 // =======================================================
-// config/firebase.js — Inicialización segura Firebase Admin
+// config/firebase.js — Firebase Admin (FINAL)
 // =======================================================
 
 import admin from "firebase-admin";
 
 let bucket = null;
 
-// Leer variables de entorno
 const {
   FIREBASE_PROJECT_ID,
   FIREBASE_CLIENT_EMAIL,
@@ -14,29 +13,22 @@ const {
   FIREBASE_BUCKET,
 } = process.env;
 
-// 🔎 Validación mínima (sin matar el backend)
-const firebaseReady =
-  FIREBASE_PROJECT_ID &&
-  FIREBASE_CLIENT_EMAIL &&
-  FIREBASE_PRIVATE_KEY &&
-  FIREBASE_BUCKET;
-
-if (!firebaseReady) {
-  console.warn("⚠️ Firebase NO inicializado (variables incompletas)");
+if (
+  !FIREBASE_PROJECT_ID ||
+  !FIREBASE_CLIENT_EMAIL ||
+  !FIREBASE_PRIVATE_KEY ||
+  !FIREBASE_BUCKET
+) {
+  console.warn("⚠️ Firebase NO inicializado: variables incompletas");
 } else {
   try {
-    // Preparar credenciales
-    const serviceAccount = {
-      type: "service_account",
-      project_id: FIREBASE_PROJECT_ID,
-      client_email: FIREBASE_CLIENT_EMAIL,
-      private_key: FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-    };
-
-    // Inicializar solo una vez
     if (!admin.apps.length) {
       admin.initializeApp({
-        credential: admin.credential.cert(serviceAccount),
+        credential: admin.credential.cert({
+          project_id: FIREBASE_PROJECT_ID,
+          client_email: FIREBASE_CLIENT_EMAIL,
+          private_key: FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
+        }),
         storageBucket: FIREBASE_BUCKET,
       });
 

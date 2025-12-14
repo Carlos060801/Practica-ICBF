@@ -4,14 +4,16 @@
 
 // 🔥 Cargar .env de forma segura (Windows + Railway)
 import dotenv from "dotenv";
+
 dotenv.config({
-  path: process.env.NODE_ENV === "production"
-    ? undefined           // Railway ya inyecta variables
-    : "D:/Aplicacion Bienestar/Practica-ICBF/sige-backend/.env",
+  path:
+    process.env.NODE_ENV === "production"
+      ? undefined // Railway inyecta las variables
+      : "D:/Aplicacion Bienestar/Practica-ICBF/sige-backend/.env",
 });
 
 // =========================
-// Firebase (NO rompe si no hay variables)
+// Firebase (NO rompe si faltan variables)
 // =========================
 import "./config/firebase.js";
 
@@ -25,7 +27,9 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 
+// =========================
 // MongoDB
+// =========================
 import { connectDB } from "./config/db.js";
 
 // =========================
@@ -37,7 +41,7 @@ import policyRoutes from "./routes/policy.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import changeLogRoutes from "./routes/change_log.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
-import firebaseTestRoutes from "./routes/firebase-test.routes.js";
+import firebaseRoutes from "./routes/firebase.routes.js"; // ✅ RUTA CORRECTA
 
 const app = express();
 
@@ -65,7 +69,7 @@ app.use(morgan("dev"));
 // Zona horaria Colombia
 process.env.TZ = "America/Bogota";
 
-// Archivos estáticos
+// Archivos estáticos (opcional)
 app.use(express.static(path.join(__dirname, "public")));
 
 // =========================
@@ -78,8 +82,8 @@ app.use("/api/categories", categoryRoutes);
 app.use("/api/change-log", changeLogRoutes);
 app.use("/api/notifications", notificationRoutes);
 
-// 🔥 Firebase test
-app.use("/api/firebase", firebaseTestRoutes);
+// 🔥 Firebase Storage
+app.use("/api/firebase", firebaseRoutes);
 
 // =========================
 // Ruta base

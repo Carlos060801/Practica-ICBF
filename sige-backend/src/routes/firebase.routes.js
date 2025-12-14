@@ -1,5 +1,5 @@
 // =======================================================
-// routes/firebase.routes.js — Subida de archivos a Firebase
+// routes/firebase.routes.js — Subida de archivos Firebase (OK)
 // =======================================================
 
 import { Router } from "express";
@@ -8,12 +8,10 @@ import bucket from "../config/firebase.js";
 
 const router = Router();
 
-// 📦 Multer en memoria (ideal para Railway / serverless)
+// Multer en memoria (Railway-friendly)
 const upload = multer({
   storage: multer.memoryStorage(),
-  limits: {
-    fileSize: 20 * 1024 * 1024, // 20 MB
-  },
+  limits: { fileSize: 20 * 1024 * 1024 }, // 20MB
 });
 
 // =======================================================
@@ -21,7 +19,6 @@ const upload = multer({
 // =======================================================
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
-    // 🔒 Validaciones
     if (!bucket) {
       return res.status(500).json({
         ok: false,
@@ -36,11 +33,9 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       });
     }
 
-    // 📄 Nombre del archivo en Firebase
     const fileName = `policies/${Date.now()}_${req.file.originalname}`;
     const file = bucket.file(fileName);
 
-    // ⬆️ Stream de subida
     const stream = file.createWriteStream({
       resumable: false,
       metadata: {
@@ -48,23 +43,22 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       },
     });
 
-    // ❌ Error en subida
     stream.on("error", (error) => {
       console.error("❌ Error Firebase Stream:", error);
       return res.status(500).json({
         ok: false,
-        message: "Error subiendo archivo a Firebase",
+        message: "Error subiendo archivo",
         error: error.message,
       });
     });
 
-    // ✅ Subida exitosa
     stream.on("finish", async () => {
       try {
-        // 🔓 Hacer público el archivo (FUNCIONA EN PLAN FREE)
-        await file.makePublic();
-
-        const url = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+        // ✅ URL firmada (NO makePublic)
+        const [url] = await file.getSignedUrl({
+          action: "read",
+          expires: "03-01-2035",
+        });
 
         return res.status(200).json({
           ok: true,
@@ -73,16 +67,15 @@ router.post("/upload", upload.single("file"), async (req, res) => {
           url,
         });
       } catch (err) {
-        console.error("❌ Error haciendo público el archivo:", err);
+        console.error("❌ Error generando URL:", err);
         return res.status(500).json({
           ok: false,
-          message: "Archivo subido pero no se pudo publicar",
+          message: "Archivo subido pero no se pudo generar URL",
           error: err.message,
         });
       }
     });
 
-    // 🚀 Enviar buffer
     stream.end(req.file.buffer);
   } catch (error) {
     console.error("❌ Error general Firebase:", error);

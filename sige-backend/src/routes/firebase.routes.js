@@ -1,16 +1,12 @@
-import { Router } from "express";
-import multer from "multer";
-import bucket from "../config/firebase.js";
-
-const router = Router();
-
-const upload = multer({
-  storage: multer.memoryStorage(),
-  limits: { fileSize: 20 * 1024 * 1024 },
-});
-
 router.post("/upload", upload.single("file"), async (req, res) => {
   try {
+    if (!bucket) {
+      return res.status(500).json({
+        ok: false,
+        message: "Firebase bucket no inicializado",
+      });
+    }
+
     if (!req.file) {
       return res.status(400).json({
         ok: false,
@@ -23,7 +19,9 @@ router.post("/upload", upload.single("file"), async (req, res) => {
 
     const stream = file.createWriteStream({
       resumable: false,
-      metadata: { contentType: req.file.mimetype },
+      metadata: {
+        contentType: req.file.mimetype,
+      },
     });
 
     stream.on("error", (err) => {
@@ -48,5 +46,3 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     res.status(500).json({ ok: false, error: err.message });
   }
 });
-
-export default router;

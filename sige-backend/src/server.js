@@ -1,15 +1,17 @@
 // =======================================================
-// server.js — Backend SIGE (Estable para Windows y Railway)
+// server.js — Backend SIGE (Windows + Railway + Firebase)
 // =======================================================
 
-// 🔥 CARGA FORZADA DEL .env (SOLUCIÓN DEFINITIVA EN WINDOWS)
+// 🔥 Cargar .env de forma segura (Windows + Railway)
 import dotenv from "dotenv";
 dotenv.config({
-  path: "D:/Aplicacion Bienestar/Practica-ICBF/sige-backend/.env",
+  path: process.env.NODE_ENV === "production"
+    ? undefined           // Railway ya inyecta variables
+    : "D:/Aplicacion Bienestar/Practica-ICBF/sige-backend/.env",
 });
 
 // =========================
-// Firebase (no rompe si no hay variables)
+// Firebase (NO rompe si no hay variables)
 // =========================
 import "./config/firebase.js";
 
@@ -23,7 +25,7 @@ import morgan from "morgan";
 import path from "path";
 import { fileURLToPath } from "url";
 
-// DB
+// MongoDB
 import { connectDB } from "./config/db.js";
 
 // =========================
@@ -35,6 +37,7 @@ import policyRoutes from "./routes/policy.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import changeLogRoutes from "./routes/change_log.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import firebaseTestRoutes from "./routes/firebase-test.routes.js";
 
 const app = express();
 
@@ -59,7 +62,7 @@ app.use(
 app.use(helmet());
 app.use(morgan("dev"));
 
-// Timezone Colombia
+// Zona horaria Colombia
 process.env.TZ = "America/Bogota";
 
 // Archivos estáticos
@@ -74,6 +77,9 @@ app.use("/api/policies", policyRoutes);
 app.use("/api/categories", categoryRoutes);
 app.use("/api/change-log", changeLogRoutes);
 app.use("/api/notifications", notificationRoutes);
+
+// 🔥 Firebase test
+app.use("/api/firebase", firebaseTestRoutes);
 
 // =========================
 // Ruta base
@@ -96,5 +102,5 @@ connectDB();
 const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Servidor SIGE corriendo en http://localhost:${PORT}`);
+  console.log(`🚀 Servidor SIGE corriendo en puerto ${PORT}`);
 });

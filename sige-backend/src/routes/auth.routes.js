@@ -3,23 +3,18 @@
 // =======================================================
 
 import { Router } from "express";
-import { login } from "../controllers/auth.controller.js";
+import { register, login, changePassword } from "../controllers/auth.controller.js";
+import { verifyToken } from "../middleware/auth.middleware.js";
 
 const router = Router();
 
-// =========================
+// Registro
+router.post("/register", register);
+
 // Login
-// =========================
 router.post("/login", login);
 
-// =========================
-// Ruta de prueba
-// =========================
-router.get("/test", (req, res) => {
-  res.json({
-    ok: true,
-    message: "Ruta /api/auth/test funcionando correctamente 🚀",
-  });
-});
+// Cambio de contraseña
+router.post("/change-password", verifyToken, changePassword);
 
 export default router;

@@ -1,46 +1,30 @@
-// =======================================================
-// config/firebase.js — Firebase Admin (FINAL)
-// =======================================================
-
 import admin from "firebase-admin";
 
-let bucket = null;
+const projectId = process.env.FIREBASE_PROJECT_ID;
+const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+let privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
-const {
-  FIREBASE_PROJECT_ID,
-  FIREBASE_CLIENT_EMAIL,
-  FIREBASE_PRIVATE_KEY,
-  FIREBASE_BUCKET,
-} = process.env;
-
-if (
-  !FIREBASE_PROJECT_ID ||
-  !FIREBASE_CLIENT_EMAIL ||
-  !FIREBASE_PRIVATE_KEY ||
-  !FIREBASE_BUCKET
-) {
-  console.warn("⚠️ Firebase NO inicializado: variables incompletas");
+if (!projectId || !clientEmail || !privateKey) {
+  console.warn("⚠️ Firebase Admin no inicializado: faltan variables de entorno");
 } else {
-  try {
-    if (!admin.apps.length) {
-      admin.initializeApp({
-        credential: admin.credential.cert({
-          project_id: FIREBASE_PROJECT_ID,
-          client_email: FIREBASE_CLIENT_EMAIL,
-          private_key: FIREBASE_PRIVATE_KEY.replace(/\\n/g, "\n"),
-        }),
-        storageBucket: FIREBASE_BUCKET,
-      });
+  privateKey = privateKey.replace(/\\n/g, "\n");
 
-      console.log("✅ Firebase Admin inicializado correctamente");
-      console.log("🪣 Bucket:", FIREBASE_BUCKET);
-    }
+  if (!admin.apps.length) {
+    admin.initializeApp({
+      credential: admin.credential.cert({
+        projectId,
+        clientEmail,
+        privateKey,
+      }),
+      // ✅ BUCKET REAL (producción)
+      storageBucket: process.env.FIREBASE_BUCKET,
+    });
 
-    bucket = admin.storage().bucket();
-  } catch (error) {
-    console.error("❌ Error inicializando Firebase:", error.message);
-    bucket = null;
+    console.log("✅ Firebase Admin inicializado correctamente");
   }
 }
 
-export default bucket;
+// Exportamos bucket para usarlo en las rutas
+export const bucket = admin.apps.length
+  ? admin.storage().bucket()
+  : null;

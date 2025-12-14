@@ -1,5 +1,0 @@
-node_modules/
-.env
-uploads/
-# Firebase Admin Credentials
-src/config/serviceAccountKey.json

@@ -17,13 +17,15 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     if (!bucket) {
       return res.status(500).json({
-        error: "Firebase no inicializado correctamente",
+        error: "Firebase no inicializado",
       });
     }
 
     const file = req.file;
     if (!file) {
-      return res.status(400).json({ message: "Archivo requerido" });
+      return res.status(400).json({
+        message: "Archivo requerido",
+      });
     }
 
     const fileName = `uploads/${Date.now()}_${file.originalname}`;
@@ -40,7 +42,6 @@ router.post("/upload", upload.single("file"), async (req, res) => {
     });
 
     blobStream.on("finish", async () => {
-      // Hacer público el archivo
       await blob.makePublic();
 
       const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;

@@ -15,7 +15,7 @@ import { fileURLToPath } from "url";
 import { connectDB } from "./config/db.js";
 
 // =========================
-// RUTAS
+// IMPORTAR RUTAS
 // =========================
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
@@ -23,6 +23,7 @@ import policyRoutes from "./routes/policy.routes.js";
 import categoryRoutes from "./routes/category.routes.js";
 import changeLogRoutes from "./routes/change_log.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
+import firebaseRoutes from "./routes/firebase.routes.js";
 
 const app = express();
 
@@ -31,24 +32,30 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // =========================
-// MIDDLEWARES
+// MIDDLEWARES GENERALES
 // =========================
-app.use(express.json({ limit: "25mb" }));
-
-app.use(cors({
-  origin: "*",
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  allowedHeaders: ["Content-Type", "Authorization"],
-}));
+app.use(
+  cors({
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 
 app.use(helmet());
 app.use(morgan("dev"));
 
-// Timezone Colombia
+// Zona horaria Colombia
 process.env.TZ = "America/Bogota";
 
-// Archivos públicos
+// Archivos públicos (opcional)
 app.use(express.static(path.join(__dirname, "public")));
+
+// =======================================================
+// ✅ JSON PRIMERO (CLAVE)
+// =======================================================
+app.use(express.json({ limit: "25mb" }));
+app.use(express.urlencoded({ extended: true }));
 
 // =========================
 // API ROUTES
@@ -61,7 +68,12 @@ app.use("/api/change-log", changeLogRoutes);
 app.use("/api/notifications", notificationRoutes);
 
 // =========================
-// ROOT
+// 🔥 SOLO FIREBASE USA MULTER
+// =========================
+app.use("/api/firebase", firebaseRoutes);
+
+// =========================
+// ROOT (HEALTH CHECK)
 // =========================
 app.get("/", (req, res) => {
   res.json({
@@ -74,10 +86,10 @@ app.get("/", (req, res) => {
 // =========================
 // SERVER
 // =========================
-connectDB();
-
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`🚀 SIGE Backend activo en puerto ${PORT}`);
+connectDB().then(() => {
+  app.listen(PORT, () => {
+    console.log(`🚀 SIGE Backend activo en puerto ${PORT}`);
+  });
 });

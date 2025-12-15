@@ -1,4 +1,6 @@
-// controllers/auth.controller.js
+// =======================================================
+// controllers/auth.controller.js — FIX FINAL SIGE
+// =======================================================
 
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -12,7 +14,11 @@ export const register = async (req, res) => {
   try {
     const { email, password, role } = req.body;
 
-    const emailLower = email.toLowerCase();
+    const emailLower = email.toLowerCase().trim();
+
+    if (!email || !password || !role) {
+      return res.status(400).json({ message: "Datos incompletos" });
+    }
 
     if (!ROLES.includes(role)) {
       return res.status(400).json({ message: "Rol inválido" });
@@ -29,35 +35,49 @@ export const register = async (req, res) => {
       email: emailLower,
       password: hashed,
       role,
+      name: "",
+      phone: "",
     });
 
     await createNotification({
       type: "success",
       title: "Nuevo usuario creado",
-      message: `El usuario ${emailLower} ha sido registrado.`,
+      message: `El usuario ${emailLower} fue registrado`,
     });
 
-    return res.json({ message: "Usuario registrado correctamente", user });
+    return res.status(201).json({
+      message: "Usuario registrado correctamente",
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+      },
+    });
 
   } catch (err) {
-    return res.status(500).json({ message: "Error en registro", error: err.message });
+    console.error("❌ Register:", err);
+    return res.status(500).json({ message: "Error en registro" });
   }
 };
 
 // =====================================================
-// LOGIN
+// LOGIN (🔥 ESTE ERA EL PROBLEMA)
 // =====================================================
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const emailLower = email.toLowerCase();
-    const user = await User.findOne({ email: emailLower });
+    const emailLower = email.toLowerCase().trim();
 
-    if (!user) return res.status(400).json({ message: "Usuario no encontrado" });
+    const user = await User.findOne({ email: emailLower });
+    if (!user) {
+      return res.status(401).json({ message: "Credenciales incorrectas" });
+    }
 
     const validPass = await bcrypt.compare(password, user.password);
-    if (!validPass) return res.status(400).json({ message: "Contraseña incorrecta" });
+    if (!validPass) {
+      return res.status(401).json({ message: "Credenciales incorrectas" });
+    }
 
     const token = jwt.sign(
       { id: user._id, role: user.role },
@@ -67,18 +87,26 @@ export const login = async (req, res) => {
 
     await createNotification({
       type: "info",
-      title: "Nuevo inicio de sesión",
+      title: "Inicio de sesión",
       message: `El usuario ${emailLower} inició sesión`,
     });
 
+    // 🔥 RESPUESTA CORRECTA PARA FLUTTER
     return res.json({
       message: "Login exitoso",
       token,
-      role: user.role,
+      user: {
+        id: user._id,
+        email: user.email,
+        role: user.role,
+        name: user.name || "",
+        photo: user.photo || "",
+      },
     });
 
   } catch (err) {
-    return res.status(500).json({ message: "Error en login", error: err.message });
+    console.error("❌ Login:", err);
+    return res.status(500).json({ message: "Error en login" });
   }
 };
 
@@ -92,22 +120,17 @@ export const changePassword = async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ message: "Usuario no encontrado" });
 
-    const valid = bcrypt.compareSync(currentPassword, user.password);
+    const valid = await bcrypt.compare(currentPassword, user.password);
     if (!valid) {
-      return res.status(400).json({ message: "La contraseña actual es incorrecta" });
+      return res.status(400).json({ message: "Contraseña actual incorrecta" });
     }
 
-    const salt = bcrypt.genSaltSync(10);
-    user.password = bcrypt.hashSync(newPassword, salt);
-
+    user.password = await bcrypt.hash(newPassword, 10);
     await user.save();
 
     return res.json({ message: "Contraseña actualizada correctamente" });
 
   } catch (err) {
-    return res.status(500).json({
-      message: "Error al cambiar contraseña",
-      error: err.message,
-    });
+    return res.status(500).json({ message: "Error al cambiar contraseña" });
   }
 };

@@ -5,7 +5,7 @@ const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
 let privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
 if (!projectId || !clientEmail || !privateKey) {
-  console.warn("⚠️ Firebase Admin no inicializado: faltan variables de entorno");
+  console.warn("⚠️ Firebase Admin no inicializado: faltan variables");
 } else {
   privateKey = privateKey.replace(/\\n/g, "\n");
 
@@ -16,15 +16,13 @@ if (!projectId || !clientEmail || !privateKey) {
         clientEmail,
         privateKey,
       }),
-      // ✅ BUCKET REAL (producción)
-      storageBucket: process.env.FIREBASE_BUCKET,
+      storageBucket: process.env.FIREBASE_BUCKET, // sige-95d85.appspot.com
     });
 
-    console.log("✅ Firebase Admin inicializado correctamente");
+    console.log("✅ Firebase Admin inicializado");
   }
 }
 
-// Exportamos bucket para usarlo en las rutas
 export const bucket = admin.apps.length
   ? admin.storage().bucket()
   : null;

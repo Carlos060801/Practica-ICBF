@@ -3,9 +3,9 @@
 // =========================================================
 
 import { Policy } from "../models/Policy.js";
-import bucket from "../config/firebase.js";
+import { bucket } from "../config/firebase.js"; // ✅ IMPORT CORRECTO
 import { createAudit } from "../utils/audit.js";
-import { createNotification } from "./notifications.controller.js";  // 🔔 IMPORTANTE
+import { createNotification } from "./notifications.controller.js";
 
 // =========================================================
 // 🛠 Normalizador de categorías
@@ -29,7 +29,6 @@ export const listPolicies = async (req, res) => {
       .sort({ createdAt: -1 });
 
     return res.json(policies);
-
   } catch (err) {
     return res.status(500).json({
       message: "Error obteniendo políticas",
@@ -46,14 +45,17 @@ export const uploadPolicy = async (req, res) => {
     const { title, description, category } = req.body;
 
     if (!title || !category) {
-      return res.status(400).json({ message: "title y category son obligatorios" });
+      return res
+        .status(400)
+        .json({ message: "title y category son obligatorios" });
     }
 
     if (!req.file) {
-      return res.status(400).json({ message: "No se recibió archivo PDF" });
+      return res
+        .status(400)
+        .json({ message: "No se recibió archivo PDF" });
     }
 
-    // Normalizar categoría
     const cleanCategory = normalizeCategory(category);
 
     // Guardar PDF en Firebase
@@ -69,7 +71,7 @@ export const uploadPolicy = async (req, res) => {
       expires: "03-09-2100",
     });
 
-    // Guardar en Mongo
+    // Guardar en MongoDB
     const newPolicy = await Policy.create({
       title,
       description,
@@ -86,11 +88,7 @@ export const uploadPolicy = async (req, res) => {
       newPolicy._id
     );
 
-    // ======================================================
-    // 🔔 NOTIFICACIÓN AUTOMÁTICA A:
-    // - Coordinadora de planeación
-    // - Colaboradores
-    // ======================================================
+    // 🔔 Notificación
     await createNotification({
       type: "info",
       title: "Nueva política publicada",
@@ -102,7 +100,6 @@ export const uploadPolicy = async (req, res) => {
       message: "Política subida correctamente",
       policy: newPolicy,
     });
-
   } catch (err) {
     return res.status(500).json({
       message: "Error subiendo política",
@@ -128,7 +125,9 @@ export const updatePolicy = async (req, res) => {
     );
 
     if (!updated) {
-      return res.status(404).json({ message: "Política no encontrada" });
+      return res
+        .status(404)
+        .json({ message: "Política no encontrada" });
     }
 
     await createAudit(req.user.id, "Editó política", "Política", id);
@@ -137,7 +136,6 @@ export const updatePolicy = async (req, res) => {
       message: "Política actualizada correctamente",
       policy: updated,
     });
-
   } catch (err) {
     return res.status(500).json({
       message: "Error actualizando política",
@@ -154,8 +152,11 @@ export const deletePolicy = async (req, res) => {
     const { id } = req.params;
 
     const policy = await Policy.findById(id);
-    if (!policy)
-      return res.status(404).json({ message: "Política no encontrada" });
+    if (!policy) {
+      return res
+        .status(404)
+        .json({ message: "Política no encontrada" });
+    }
 
     // Eliminar archivo en Firebase
     const match = policy.fileUrl.match(/policies%2F([^?]+)/);
@@ -164,13 +165,10 @@ export const deletePolicy = async (req, res) => {
       await bucket.file(`policies/${fileName}`).delete().catch(() => {});
     }
 
-    // Eliminar documento en MongoDB
     await Policy.findByIdAndDelete(id);
-
     await createAudit(req.user.id, "Eliminó política", "Política", id);
 
     return res.json({ message: "Política eliminada correctamente" });
-
   } catch (err) {
     return res.status(500).json({
       message: "Error eliminando política",
@@ -190,7 +188,6 @@ export const testFirebase = async (req, res) => {
       message: "Conexión exitosa con Firebase Storage",
       files: files.map((f) => f.name),
     });
-
   } catch (err) {
     return res.status(500).json({
       message: "Error conectando a Firebase",

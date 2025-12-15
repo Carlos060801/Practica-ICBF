@@ -5,13 +5,12 @@
 import { User } from "../models/User.js";
 import { ChangeLog } from "../models/ChangeLog.js";
 import { createNotification } from "./notifications.controller.js";
-import bucket from "../config/firebase.js"; // 🔥 Firebase Storage
+import { bucket } from "../config/firebase.js";
 
 // =======================================================
 // FECHA BOGOTÁ
 // =======================================================
-const fechaBogota = () =>
-  new Date(Date.now() - 5 * 60 * 60 * 1000);
+const fechaBogota = () => new Date(Date.now() - 5 * 60 * 60 * 1000);
 
 // =======================================================
 // GET PROFILE
@@ -19,11 +18,10 @@ const fechaBogota = () =>
 export const getProfile = async (req, res) => {
   try {
     const user = await User.findById(req.user.id).select("-password");
-    if (!user)
+    if (!user) {
       return res.status(404).json({ message: "Usuario no encontrado" });
-
+    }
     res.json({ user });
-
   } catch (err) {
     res.status(500).json({
       message: "Error obteniendo perfil",
@@ -43,10 +41,8 @@ export const updateProfile = async (req, res) => {
     if (name) updateData.name = name;
     if (phone) updateData.phone = phone;
 
-    // =============================================
-    // FOTO BASE64 → Convertir y subir a Firebase
-    // =============================================
-    if (photoBase64 && photoBase64.startsWith("data:image")) {
+    // ================= FOTO BASE64 → FIREBASE =================
+    if (bucket && photoBase64?.startsWith("data:image")) {
       try {
         const base64 = photoBase64.split(",")[1];
         const buffer = Buffer.from(base64, "base64");
@@ -59,17 +55,17 @@ export const updateProfile = async (req, res) => {
           public: true,
         });
 
-        const downloadURL = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-        updateData.photo = downloadURL;
-
+        updateData.photo = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
       } catch (err) {
-        console.log("❌ Error subiendo imagen a Firebase:", err.message);
+        console.error("❌ Error subiendo imagen:", err.message);
       }
     }
 
-    const user = await User.findByIdAndUpdate(req.user.id, updateData, {
-      new: true,
-    }).select("-password");
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      updateData,
+      { new: true }
+    ).select("-password");
 
     await ChangeLog.create({
       user: user._id,
@@ -80,8 +76,10 @@ export const updateProfile = async (req, res) => {
       createdAt: fechaBogota(),
     });
 
-    res.json({ message: "Perfil actualizado correctamente", user });
-
+    res.json({
+      message: "Perfil actualizado correctamente",
+      user,
+    });
   } catch (err) {
     res.status(500).json({
       message: "Error al actualizar perfil",
@@ -95,37 +93,28 @@ export const updateProfile = async (req, res) => {
 // =======================================================
 export const uploadPhoto = async (req, res) => {
   try {
-    if (!req.file)
+    if (!bucket) {
+      return res.status(500).json({ message: "Firebase no inicializado" });
+    }
+
+    if (!req.file) {
       return res.status(400).json({ message: "No se envió ninguna imagen" });
+    }
 
     const user = await User.findById(req.user.id);
 
-    // =============================================
-    // Si tiene foto previa: eliminarla
-    // =============================================
+    // -------- eliminar foto anterior ----------
     if (user.photo) {
       try {
-        let photoPath = "";
-
         const marker = `${bucket.name}/`;
-        const index = user.photo.indexOf(marker);
-
-        if (index !== -1) {
-          photoPath = user.photo.substring(index + marker.length);
-        } else {
-          const parts = user.photo.split("/");
-          photoPath = parts.slice(-2).join("/");
+        const idx = user.photo.indexOf(marker);
+        if (idx !== -1) {
+          const oldPath = user.photo.substring(idx + marker.length);
+          await bucket.file(oldPath).delete().catch(() => {});
         }
-
-        await bucket.file(photoPath).delete().catch(() => {});
-      } catch (err) {
-        console.log("⚠ Error borrando foto anterior:", err.message);
-      }
+      } catch {}
     }
 
-    // =============================================
-    // Subida nueva foto
-    // =============================================
     const fileName = `perfiles/${req.user.id}-${Date.now()}.jpg`;
     const file = bucket.file(fileName);
 
@@ -135,7 +124,6 @@ export const uploadPhoto = async (req, res) => {
     });
 
     const imageUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
-
     user.photo = imageUrl;
     await user.save();
 
@@ -151,41 +139,36 @@ export const uploadPhoto = async (req, res) => {
       message: "Foto actualizada correctamente",
       photoUrl: imageUrl,
     });
-
   } catch (err) {
     res.status(500).json({
-      message: "Error al subir foto a Firebase",
+      message: "Error al subir foto",
       error: err.message,
     });
   }
 };
 
 // =======================================================
-// DELETE PHOTO (Firebase)
+// DELETE PHOTO
 // =======================================================
 export const deletePhoto = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    if (!bucket) {
+      return res.status(500).json({ message: "Firebase no inicializado" });
+    }
 
-    if (!user.photo)
-      return res.status(400).json({ message: "El usuario no tiene foto registrada" });
+    const user = await User.findById(req.user.id);
+    if (!user.photo) {
+      return res.status(400).json({ message: "El usuario no tiene foto" });
+    }
 
     try {
-      let photoPath = "";
       const marker = `${bucket.name}/`;
       const idx = user.photo.indexOf(marker);
-
       if (idx !== -1) {
-        photoPath = user.photo.substring(idx + marker.length);
-      } else {
-        const parts = user.photo.split("/");
-        photoPath = parts.slice(-2).join("/");
+        const path = user.photo.substring(idx + marker.length);
+        await bucket.file(path).delete().catch(() => {});
       }
-
-      await bucket.file(photoPath).delete().catch(() => {});
-    } catch (err) {
-      console.log("⚠ Error al eliminar foto:", err.message);
-    }
+    } catch {}
 
     user.photo = "";
     await user.save();
@@ -199,7 +182,6 @@ export const deletePhoto = async (req, res) => {
     });
 
     res.json({ message: "Foto eliminada correctamente" });
-
   } catch (err) {
     res.status(500).json({
       message: "Error eliminando foto",
@@ -215,7 +197,6 @@ export const getAllUsers = async (req, res) => {
   try {
     const users = await User.find().select("-password");
     res.json(users);
-
   } catch (err) {
     res.status(500).json({
       message: "Error al obtener usuarios",
@@ -225,44 +206,47 @@ export const getAllUsers = async (req, res) => {
 };
 
 // =======================================================
-// CHANGE ROLE
+// CHANGE ROLE (GENÉRICO)
 // =======================================================
 export const changeUserRole = async (req, res) => {
   try {
     const { role } = req.body;
-
     const validRoles = ["admin_app", "coord_planeacion", "colaborador"];
-    if (!validRoles.includes(role))
+
+    if (!validRoles.includes(role)) {
       return res.status(400).json({ message: "Rol inválido" });
+    }
 
-    const u = await User.findById(req.params.id);
-    if (!u) return res.status(404).json({ message: "Usuario no encontrado" });
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
 
-    const old = u.role;
-    u.role = role;
-    await u.save();
+    const oldRole = user.role;
+    user.role = role;
+    await user.save();
 
     await ChangeLog.create({
-      user: u._id,
-      email: u.email,
+      user: user._id,
+      email: user.email,
       changedBy: req.user.email,
       action: "Cambio de rol",
-      oldRole: old,
+      oldRole,
       newRole: role,
       createdAt: fechaBogota(),
     });
 
-    if (role !== "admin_app") {
-      await createNotification({
-        type: "warning",
-        title: "Cambio de rol",
-        message: `El usuario ${u.name} ahora tiene el rol ${role}.`,
-        roles: ["coord_planeacion"],
-      });
-    }
+    await createNotification({
+      type: "warning",
+      title: "Cambio de rol",
+      message: `Tu rol fue cambiado a ${role}`,
+      roles: [role],
+    });
 
-    res.json({ message: "Rol actualizado correctamente", user: u });
-
+    res.json({
+      message: "Rol actualizado correctamente",
+      user,
+    });
   } catch (err) {
     res.status(500).json({
       message: "Error al cambiar rol",
@@ -276,60 +260,68 @@ export const changeUserRole = async (req, res) => {
 // =======================================================
 export const setAdminRole = async (req, res) => {
   try {
-    const u = await User.findById(req.params.id);
-    if (!u) return res.status(404).json({ message: "Usuario no encontrado" });
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
 
-    const old = u.role;
-    u.role = "admin_app";
-    await u.save();
+    const oldRole = user.role;
+    user.role = "admin_app";
+    await user.save();
 
     await ChangeLog.create({
-      user: u._id,
-      email: u.email,
+      user: user._id,
+      email: user.email,
       changedBy: req.user.email,
-      action: "Asignar admin_app",
-      oldRole: old,
+      action: "Asignar rol admin_app",
+      oldRole,
       newRole: "admin_app",
       createdAt: fechaBogota(),
     });
 
-    res.json({ message: "Ahora es admin_app", user: u });
-
+    res.json({
+      message: "Rol admin_app asignado correctamente",
+      user,
+    });
   } catch (err) {
     res.status(500).json({
-      message: "Error al asignar admin",
+      message: "Error asignando rol admin",
       error: err.message,
     });
   }
 };
 
 // =======================================================
-// SET COORD_PLANEACIÓN
+// SET COORD_PLANEACION ROLE
 // =======================================================
 export const setCoordPlaneacionRole = async (req, res) => {
   try {
-    const u = await User.findById(req.params.id);
-    if (!u) return res.status(404).json({ message: "Usuario no encontrado" });
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: "Usuario no encontrado" });
+    }
 
-    const old = u.role;
-    u.role = "coord_planeacion";
-    await u.save();
+    const oldRole = user.role;
+    user.role = "coord_planeacion";
+    await user.save();
 
     await ChangeLog.create({
-      user: u._id,
-      email: u.email,
+      user: user._id,
+      email: user.email,
       changedBy: req.user.email,
-      action: "Asignar coord_planeacion",
-      oldRole: old,
+      action: "Asignar rol coord_planeacion",
+      oldRole,
       newRole: "coord_planeacion",
       createdAt: fechaBogota(),
     });
 
-    res.json({ message: "Ahora es coord_planeacion", user: u });
-
+    res.json({
+      message: "Rol coord_planeacion asignado correctamente",
+      user,
+    });
   } catch (err) {
     res.status(500).json({
-      message: "Error al asignar coordinación",
+      message: "Error asignando rol coordinación",
       error: err.message,
     });
   }

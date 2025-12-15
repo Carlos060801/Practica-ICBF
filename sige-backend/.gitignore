@@ -1,0 +1,9 @@
+# ENV
+.env
+
+# Firebase / Google
+serviceAccountKey.json
+*.json
+
+# Node
+node_modules

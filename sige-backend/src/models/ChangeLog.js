@@ -17,11 +17,11 @@ const changeLogSchema = new Schema(
       trim: true,
     },
     changedBy: {
-      type: String, // correo de quien hizo el cambio
+      type: String,
       default: "Sistema",
     },
     action: {
-      type: String, // Ej: "Actualización de perfil", "Cambio de rol"
+      type: String,
       required: true,
     },
     oldRole: {
@@ -31,7 +31,7 @@ const changeLogSchema = new Schema(
       type: String,
     },
     details: {
-      type: String, // JSON.stringify({ ... })
+      type: String,
     },
     createdAt: {
       type: Date,

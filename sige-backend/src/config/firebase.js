@@ -16,10 +16,10 @@ if (!projectId || !clientEmail || !privateKey) {
         clientEmail,
         privateKey,
       }),
-      storageBucket: process.env.FIREBASE_BUCKET, // sige-95d85.appspot.com
+      storageBucket: "sige-95d85.appspot.com", // ✅ FIJO
     });
 
-    console.log("✅ Firebase Admin inicializado");
+    console.log("✅ Firebase Admin inicializado correctamente");
   }
 }
 

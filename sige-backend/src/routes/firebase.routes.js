@@ -17,17 +17,17 @@ router.post("/upload", upload.single("file"), async (req, res) => {
   try {
     if (!bucket) {
       return res.status(500).json({
-        error: "Firebase no inicializado",
+        message: "Firebase no inicializado",
       });
     }
 
-    const file = req.file;
-    if (!file) {
+    if (!req.file) {
       return res.status(400).json({
         message: "Archivo requerido",
       });
     }
 
+    const file = req.file;
     const fileName = `uploads/${Date.now()}_${file.originalname}`;
     const blob = bucket.file(fileName);
 
@@ -37,24 +37,28 @@ router.post("/upload", upload.single("file"), async (req, res) => {
       },
     });
 
-    blobStream.on("error", (error) => {
-      res.status(500).json({ error: error.message });
+    blobStream.on("error", (err) => {
+      console.error("❌ Error Firebase:", err);
+      return res.status(500).json({
+        message: "Error al subir archivo a Firebase",
+      });
     });
 
-    blobStream.on("finish", async () => {
-      await blob.makePublic();
-
+    blobStream.on("finish", () => {
       const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
 
-      res.status(201).json({
+      return res.status(201).json({
         message: "Archivo subido correctamente",
-        url: publicUrl,
+        fileUrl: publicUrl, // 👈 CLAVE
       });
     });
 
     blobStream.end(file.buffer);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    console.error("❌ Error general:", error);
+    return res.status(500).json({
+      message: error.message,
+    });
   }
 });
 
